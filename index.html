@@ -1,1 +1,23 @@
+create table if not exists orders (
+  id bigint generated always as identity primary key,
+  created_at timestamptz default now(),
+  date text not null,
+  cust_id text,
+  cust_name text not null,
+  province text not null,
+  status text default 'pending',
+  note text
+);
 
+create table if not exists order_items (
+  id bigint generated always as identity primary key,
+  order_id bigint references orders(id) on delete cascade,
+  product text not null,
+  dozen_ordered numeric not null default 0,
+  dozen_delivered numeric default 0,
+  dozen_remaining numeric default 0,
+  status text default 'pending'
+);
+
+alter table orders disable row level security;
+alter table order_items disable row level security;
